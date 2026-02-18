@@ -1,50 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bam_dcp_event</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 800px;
-        }
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        p {
-            font-size: 1.2rem;
-            color: #888;
-            line-height: 1.6;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strengthening Our Digital Infrastructure — Decentral Park × BAM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .deck {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%) scale(var(--scale, 1));
+    transform-origin: center center;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* Backgrounds */
+  .bg-white { background: #fff; color: #222; }
+  .bg-green { background: #1B4332; color: #E8F5E9; }
+  .bg-light { background: #F5F5F0; color: #222; }
+  .bg-warm  { background: #FEFAE0; color: #222; }
+
+  /* Type */
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  p, li {
+    font-size: 24px;
+    line-height: 1.6;
+  }
+  .big { font-size: 28px; }
+  .small { font-size: 18px; opacity: 0.6; }
+  .label {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .label-green { background: #2D6A4F; color: #D8F3DC; }
+  .label-red   { background: #E07A5F; color: #fff; }
+  .label-outline { border: 2px solid #95D5B2; color: #95D5B2; }
+
+  /* Case card layout */
+  .case-layout {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+    gap: 40px;
+    align-items: center;
+  }
+  .case-layout img {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+  }
+  .source-label {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 8px;
+    opacity: 0.6;
+  }
+
+  /* Two column */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* Simple box */
+  .box {
+    background: rgba(0,0,0,0.05);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .box-dark {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .box p, .box-dark p { font-size: 20px; }
+  .box-dark h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  ul { list-style: none; padding: 0; }
+  ul li {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-size: 24px;
+  }
+  ul li:last-child { border-bottom: none; }
+  .green-text { color: #2D6A4F; }
+  .red-text { color: #E07A5F; }
+  .bold { font-weight: 700; }
+
+  /* QR placeholder for threat modeling */
+  .qr-box {
+    width: 220px;
+    height: 220px;
+    border: 3px dashed #40916C;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    font-size: 16px;
+    color: #40916C;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Compact case grid */
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .case-item {
+    background: rgba(0,0,0,0.04);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: start;
+  }
+  .case-item-dark {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: start;
+  }
+  .case-item h3, .case-item-dark h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    margin-bottom: 6px;
+  }
+  .case-item p, .case-item-dark p { font-size: 16px; line-height: 1.45; }
+  .case-qr {
+    width: 70px;
+    min-width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    margin-top: 2px;
+  }
+
+  /* Nav */
+  .slide-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    z-index: 100;
+    font-family: monospace;
+  }
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(0,0,0,0.5);
+    color: rgba(255,255,255,0.9);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-btn:hover { background: rgba(0,0,0,0.7); }
+  .nav-prev { left: 16px; }
+  .nav-next { right: 16px; }
+
+  .highlight { background: linear-gradient(to top, #95D5B2 35%, transparent 35%); padding: 0 4px; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>bam_dcp_event</h1>
-        <p>Decentral Park Capital</p>
+
+<div class="deck">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide bg-green">
+  <h1 style="font-size:56px;">Strengthening Our<br>Digital Infrastructure</h1>
+  <p class="big" style="opacity:0.8; margin-bottom:32px;">A community workshop on data security &amp; digital systems for mutual aid</p>
+  <p style="opacity:0.5;">Decentral Park &times; BAM</p>
+</div>
+
+<!-- SLIDE 2: THE QUESTION -->
+<div class="slide bg-warm">
+  <h1 class="green-text">What digital systems can we agree we need to improve on?</h1>
+  <p class="big" style="max-width:900px;">Our digital tools deserve the same care and intentionality we bring to all our other work.</p>
+</div>
+
+<!-- SLIDE 3: WHAT DATA -->
+<div class="slide bg-white">
+  <span class="label label-green">Let's start simple</span>
+  <h2>What "data" do we handle in mutual aid work?</h2>
+  <div class="two-col" style="margin-top:12px;">
+    <div>
+      <ul>
+        <li><span class="bold">Names</span> of people we serve and volunteers</li>
+        <li><span class="bold">Addresses</span> for deliveries and pickups</li>
+        <li><span class="bold">Phone numbers</span> and contact info</li>
+        <li><span class="bold">Needs assessments</span> — who needs what</li>
+      </ul>
     </div>
+    <div>
+      <ul>
+        <li><span class="bold">Distribution records</span> — who got what, when</li>
+        <li><span class="bold">Communication logs</span> — group chats, emails</li>
+        <li><span class="bold">Financial records</span> — donations, expenses</li>
+        <li><span class="bold">Volunteer schedules</span> and sign-ups</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: WHY IT MATTERS -->
+<div class="slide bg-light">
+  <h2>Why does this matter?</h2>
+  <p class="big" style="max-width:900px; margin-bottom:24px;">
+    In recent years, government agencies have used organizations' own records as evidence against them. <span class="highlight">If you collect it, it can be requested, subpoenaed, or seized.</span>
+  </p>
+  <p style="font-size:22px;">Here are some real cases. Scan any QR code to read the full source article.</p>
+</div>
+
+<!-- SLIDE 5: RECORDS USED AGAINST ORGANIZATIONS -->
+<div class="slide bg-light">
+  <span class="label label-red">What has happened</span>
+  <h2>Organizations' own records have been used against them</h2>
+  <div class="case-grid">
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACVklEQVR4nO2ZUWrkQAxEn7cN/uy5gY8i3yzkZu2j5Aby54BM7YfsEBaSDLuw44aIYWijj6lul0rVmkF8FfuvL9Pwk/+3PHKAIkUVtYFRJeVrsXg2vgfyJglWWMvbIqc4+7AUSX4JfN/mh2Fhe2FbwPb5NbZlctiG8SL4vgy5gRWHquIUffj2LviTYeVtuM+639b7Dbblf//+X+ZHQDDCPjeg+DqJYfaxiu35+B7VH7c/PkAP+oMynCwBOZJSQiV1gN8NKGpRcxeW9Us2hWfjeyC/BgRMvg6z9hv3WbEtUdv9dgl83+Rro7ZxewlgW4oz+brf1hHYlgvg+yakFljkoh6yX9QCUwf6j6SoDay4UdupPBld4G+pP3n4UcW5iHr9+kVqcsCK2vloAUB0cf4OELUVt5Jcqqd57gR/cCCX9M7/4kYv/FGTk1UMRJXcUo46wO9QWxZsUSue1xmK98IfS6qXkzyBRe1H/91O2pvUzrvMWc7PxvdI/ypucova0oLmIvtCB/id4qT4R25HjdoC+uCPWpECO/zz+ZhziR7w59gnX0TWQt7lO9F/N84ulhtJ/Y/a+qhfNzCwqDr4f/SyLvzPkY/apreFKlj3WZCmol0F3+eRbrNI5bwI5OHnIPTy5/8+fziu7VEVtcktBxEd4Hcg9d+i6n1ymB25B/ynZnI033Q+qUiXxz8CQ9rm0VaYAvw2wID1MH/+kK+NbbkPyz63dHG9zP8zxm0pep2cKclTX/fblfB9Egf/1coHFSqOvBf/D3nbqscg4nBxTg/6M/z8f/rU/G/9fAzzTHGuFwAAAABJRU5ErkJggg==" alt="QR">
+      <div>
+        <h3>Annunciation House — El Paso, TX</h3>
+        <p>State AG demanded <span class="bold">client names, DOBs, immigration status, and intake logs</span> from a 50-year-old Catholic shelter. Goal: shut it down.</p>
+        <p class="small">Texas Tribune, 2024</p>
+      </div>
+    </div>
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOAQAAAABQysQIAAACu0lEQVR4nO2aUaobSwxET6cb/NkDWYCXotlZeEvKAgIyZCN3ARd6PgMy9T404xsIxDfkPTINaYyxjT7UlFQq1biIJ+f+4VkE/A35P0PQAKjy6E4XGF0agAFgcaZ03xdiksDa9kmDOqiD+9U1qJLG6dJ9dhpQMLYlGi0IHGis9NG2pb6eK91fCmn9n/tCWW4NAtPL+udy+U9CTC8r2xrbp28Ll0FZ/lwuvxWChknK9pE836O7hlVJYzpmOLhu2I8vYEKuQ3kGAWB1UKU6LLGTNN+NhsFO1JLnV7o/fp/xRoFJTvfoAqKrDkvIpqy6gSSgSqkWNIzuj8Kb8EZG98B2CQSS6jCw6B5TYmRVTnfJNaCL7lV+lOJ0GDUgID5y//i5vdrXl1JflihUUUDb+uVM6b5/HtGV6NB3Oq+D6D5lH0l0Rdee/2PaSkx6o0FVbkZoEF31Oy00YR+hYTl94qjA2MerAVNyXQ6jkbzt+QKbdh59ABKjOigLDRpE9+DWuN3Lerp0n52H9k5ccqru+kGqU24TFocCTyEHpl3XMa2uczC6J4FXebBvf3Nqb3IMRVf0XJQsDpim5LpBatQkcLrqoMolST4lRlJuRllpHPMoujMrRgZWpeiqicvYkYo+51aemmdXDpaFt3PdrLoubR9Lizgw4BDePu08smOn8Jr+T1cd7Lx3pnTfH9IOcoitlLK2bb1fvVz9Ij9juj89uZXnMEpmyO0vld6cnurhEmtvHIDuuwqacT86PNXd18ICS3T2r2dK910hWymltO6tO1AHF/m3q98XWs7cc6X7/BxVZ28PI7CqdCBn7aOHgZ8skfohH8VOOo/2Gw1SrEb3qt0An1AztMen+9Uvul10u7wuLJ/FrbF+jXOl+wt99GilQZVyjU2zazaM3nwGDeNY+tLBS8NhthuVv/+iOX3Iv6/CnoveTDhaAAAAAElFTkSuQmCC" alt="QR">
+      <div>
+        <h3>Catholic Charities — Brownsville, TX</h3>
+        <p>The organization's <span class="bold">own billing and intake records</span> became the evidence used to bar them from federal funding for 6 years.</p>
+        <p class="small">National Catholic Reporter, 2025</p>
+      </div>
+    </div>
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACc0lEQVR4nO2ZTYrkSgyEv2wl1FKGd4C+yAP5ZkUfaW6QPkodYCC9bFARb5Hun83UNAy8dsJoVSYWFVZKoVC6iEdxf3oIw1/8z3DUAayToE6CqZnGsUR+N78v4KHB1lUBb0mwryapn4Lfw6hAISAqKwRQfy4897ov9vP7+X0V9wbAdungLff1f/7/P8X3Ymr3Je7lyr5e+tn4/TLUQ5KpWUeSeuAyyST1Kfp3K6WwXyHqvlaw28q+3kspyyn4PQ59CutA4G0ciqTT5x/1yPcfrnQlMR5n0P+Dv9QgrGPS0KIEfIb8v5VNeksiIV0QpjZL/+ItvQHWN4gKQBIz9O+BX27r5XYtS5ia3daEyjaDf2CIfzJGcBxtC+rMoT9SwujcdAFSS0KdOfRHsh5vPTteIdTB2xz607EhQd5MDdconuEiJuAv4RpVJLW342jpbZL6b6Nzj/3LBSQBYRPo/1H/GtsWAaHhRTszzC/eWxXXyL/1AMZeeXr+TxzL+5b7WhbYy+tzS2/q1JPwexiS8GYd66SP/aWlK30K/4N6WCe9jYa1HkmM+5MZ9HOYtagObPnPj38rF3FfuuUp+H1tfrXRtmMWjBVmrGCnz/8T8Locx3BfNuub3Qr+UpatlPUU/B6GehxSP8ynK11SS28z1P/H/QlEEoP8gGaZv8fwdQ3bY9LHWXw3v9/jeymlVAK2CnW/vpb10qmg2yT1L71fviXHLJhIf0pZIerIP7BfYSsL93L+/H/g93I9bI+/mGRql34mfo9xf0l/qWwM/7+X3Nc8Eb9H+Ltgvi4AuV/vz62yzXD/8/H9yz4t8uoxif8sf7+ffiv+H7T58hK08+83AAAAAElFTkSuQmCC" alt="QR">
+      <div>
+        <h3>Campaign Against Hunger — Brooklyn, NY</h3>
+        <p>Food pantry lost <span class="bold">$1.3M in FEMA grants</span>. FEMA demanded info on migrants served. Weekly service cut from ~13,000 to ~6,500 people.</p>
+        <p class="small">THE CITY, 2025</p>
+      </div>
+    </div>
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOAQAAAABQysQIAAACmElEQVR4nO2aTYocWQyEv7IKvFTfwEdR3ayZm6mO4hsolw1qYhZ62WMwuBv8M/XASS6KRAsFei8UIdVFvPO8fnovAv6G/M4QVAAmQUgJgatd+FQv+pHS/VhISAIarsezKZs73O3rzSTVw6X7kZDL5Qb3z3V/eYLjBvG5eHmC43L907n8fMj1v5+uC3fzf4CXp7r8+Vx+cUg04OJ4Bq7HTcr/LZefCkEVkqywAhcuFYPOJNV2zHByXcX3L7Ah16G3p6I98WwCsIr5vB+iiva0wipMkrJhelP7poiwiiYgmrAKFfOa0ra8R2HKlbxrQFmB5/DDfoiUeEqaSpmyoV1SStqSGSpUMRfHivZsz8Flyi3ZW2IYgMGl6VBL7+156qyCxduoApcVJlnRO5668+LY2Y+saAZRbMne0hRIFW/NyIp2teeWNVpA4k3LLQLXmL4NEUn2DTmYcsSPKa3YFlE2gQvPsefD29On9kNUjJVoTxhFBK4edFuy97CcrBaTq5a6m9rtiAiwWqeuwRYWTNk71qj4ViQMnLlEEHtqb0xppzEfS97r+66uXNL0U4YclLYE+Z5ctzTqTE5yeYpz1LAnM+Q4iD6ZvFnQdtV1NeInT05YLcnOgcp+iE7tPbp0ZkEj9ky5pQqqkHI2EctH1CBSs6k/0kwV5iqxvNJw4KYdNkZjn+OgHC10GqXtavQJz3ap4Hh+fcK+3jhuawg5O5fHSvf959zx5ZSpXTPBm9rZjly3dhMzVl3NqF1Tow1PHTOsG7Gtiva1wVQBsaGuO0OOZ5MAjtucuqunFa9f8iHT/UCIJ8cFsOL1yywuo7lz3B4y3R896x5peVgWS6xR5J79CNaO73RGUnuqglFHj5TuB0Iuf/9F8/Ah/wIPDa2O3pHDZgAAAABJRU5ErkJggg==" alt="QR">
+      <div>
+        <h3>ICE in NYC Shelters</h3>
+        <p>ICE entered shelters <span class="bold">5+ times without warrants</span>. A nonprofit investigated for "Know Your Rights" trainings, $900K+ in grants at risk.</p>
+        <p class="small">Gothamist, 2025</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:15px; opacity:0.5; margin-top:12px;">Scan any QR code to read the full source article.</p>
+</div>
+
+<!-- SLIDE 6: NEW LAWS & INVESTIGATIONS -->
+<div class="slide bg-white">
+  <span class="label label-red">What is being proposed</span>
+  <h2>New laws and investigations targeting organizations</h2>
+  <div class="case-grid">
+    <div class="case-item" style="grid-column: 1 / -1;">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeAQAAAAB6HIMaAAAB+ElEQVR4nO2YQYrcQAxFX3UZeinfYC4SkG8wRwp9s+oDBeRlg8zPotyThDBMNmG0GOGFXNp8hOp/1W/i3Tgu79fgq/hREQVAl3ogCTxt9tuzIlqX1KWugY1+5lIURLsADWd/fTRy+X40aM6+9h8FJ+H3ol91S1OPKoD+iuUtu8aaazS2Y/VPBPQhWsECx8pC0/7ak8XEXhDtBe6tNaCH9/AF2LejtbYWRItmBGnq4QrA51k9TkDhQNdIm5/6eVISrZQ2FM5kAxtpwkZRddDoJ1R/G4Z5UhKtuiQJm7I7nk0uiTZQ0DUUrrkq2EgoqbwXTIuNx0pbWWy0lcSvGmUZ7CSBcEDh/TnJ9Xp77mBpwoRJQUKPugwG9AB8Tm8PEi85t6c65JmTMy/Lt0HX6EGaEp+/idedBBtpmnKGDWxAXb6d21dO7pW6Rk5FrojWE9I0RQ1IG1XfZRfgGiz7xr4d613SNch9ay+jojqEn69yU+I96BqYSt6yC5CwcO/BYjdw9o19e7StYm/Pt4ODT40APxteDu2FvbXWFrsBx4umdbNAV9G5nYuN4vSXpkaU5NunVwMNvzc6fo21gT4J0L8Xu8ax3h8vQ8HRCt6yX14NdvvW0P7KvmHjqoL+7R8eo8KlMe2Fknz79G/DezChgmPKiresfTn5/634E5ZIlkcVp2gCAAAAAElFTkSuQmCC" alt="QR">
+      <div>
+        <h3>The FENCE Act (S.497) — U.S. Senate, March 2025</h3>
+        <p>Would make it a <span class="bold">federal crime to shelter, transport, or financially help</span> undocumented immigrants. Up to <span class="bold">5 years</span> for the base offense, <span class="bold">10 years</span> if the person has a prior conviction, <span class="bold">20 years</span> if death or serious injury results. Critics say the language covers churches, homeless shelters, and mutual aid groups.</p>
+        <p class="small">Congress.gov</p>
+      </div>
+    </div>
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVYAAAFWAQAAAAAa1IguAAAEIElEQVR4nO2bQY7rOAxEnyMDWco3yFGUmwV9M/oofQN62YCMmgWpzJ/dX4wxGfsbQSOxuaBoiqoqsifxu9d++21T+GP7/7RFDlAcqqgmb71KTnF6FVVFkTKtf4K/B9o2SVTJ1w5A8XV/qMMM+p72hSLJP8bfw2yn6QnrvjDTYJ2358w6x/NqHdim+WAf/mtb5A1a8SaneOsArUOvJkfeircSjz7B38PjQHEk69WKAxSZJKoV6QJxuAGSQduXxva6O9DkrW+vaVmjilLVD/bhA2zXaZqA4szA9gJmmKF8v+btxfbcp2laPsbfQ2xRXE6R9WpUZT5UFSfuxHXqfYG8yRvQQVJxolTmp4pqYXb2OEBVryZvknWIhRenM06KamfHUUiSN6oSUtI6LbaJpCJ7R+nkcfAES/H2A17GTgloPRDF6ePQYi8UWdzpmRINWq9WZP0K9UGKfAgSEVwDkBNHBiDZ2XEUcgajBBIyyekJNaFarzp/HGSdJqlkTWjBvt8nRZTNXk+PH5CsKNf+vhMp0at6bJPT46jAitBp8fMtvMT3QFZn3xc3WNmec9UMks3bxDZ1GtWmZQX2RxbST/H3ENs8N3u1UOF61bswQgv8ENly6nyI4iCAKskk9ZrMq9MyLBGQT/D30HPTm2QawkvPfGCcGlwCRwV2okmW6lOyLUXlhKvEgWqhyL1ViCTj1XJTXOLctHcLIwS6od4ntL4Gz7pBm5Ym52dhBjl3b3L2h+0P3cfPs+v2N7YplMm5GrT98bUvIVQ+y/dz9DU4O364hfrUadB+pufdAYJ+zqw/SytOZy3+Kf4eYxucGgI5V8mj49mKLFBl1Iez18kbpEjbWe/fT2B6mPS1L0R85moA2/NT/D3ENvFk9PWCgIcMNXiWlehqXQI/SLJeFRJl6DDBu4sUyswFcHUb+kPqb4GsIPlFVImz14fE1Qmhg3XS/q6TtCCeF+hf5NrzvQ+amTDbKTKu0L+Qiiw7WVBk+fbjM+jn2evDje35szAtUFVk+/SUr0G3Z4A20+5+ARzlrYytUXzMSik7FxGca+hR6qMqRhvrl1ZvK9H6lM5fHzzW3pSrtuhlRK+zhETjV9BhsmVTUpOM70E6kl9Ezpw8DgGqY+H13cvIR5BDdFfA1ckoI/mTWVjxMWp7EX4hK0oGwfgLSTbf7Yyz4weiYVFyACaJRlzF8+DgEjptdm3GbBhjtpYYAik+ZkI+wd8j9clpmmaa9BVTMTFovT8swnINfTJ4d/a4e04+tFEwGeOUF9gXY8485uLe/QtyDCCBxNnxw7CtJl/n7dXrV2DIEKZm2B8mfd39s/z9t21HPkhJtWSJJ2VjPmpMUX6Cv4fXB0uWEYWCVjz0B0VYzr4v+EdzM0U5GLRrVEs7O46a/vzf4h/bX66/ACOkA8L9xKVCAAAAAElFTkSuQmCC" alt="QR">
+      <div>
+        <h3>215+ Organization Investigation</h3>
+        <p>Congress demanded records from <span class="bold">215+ organizations</span> covering all immigrant services since 2021. <span class="bold">Two weeks to comply.</span></p>
+        <p class="small">House Homeland Security Committee, 2025</p>
+      </div>
+    </div>
+    <div class="case-item">
+      <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAT4AAAE+AQAAAAA8Q0GdAAADe0lEQVR4nO2bQW5bSQxE3zcFaNkC5gBzFOoGc6RgbtY6im5ALQO0ULOo/j8ezCYBNHHSiVe2QMBdJptVLLY38VVfz7evi4PfgT9qICqAUB+tD38iSaL1QaoSgBw/A5hvCUxJwImEpOn02J6XW1RG3bYLIak++owvDkSVkFEZBa3TNPbPJQ0yiqjFcn3av7mNP8TjLyDqIm7PP+t5YrR++vAz/p+Bp8eV9rfqtl04wbmg9ajv8au/e+CsZFf4aBpNIUUxWo/KkELSahX+Brdt2wDI8/16vl95XCHP908Aj+tz27bLR5/xxYGTpyZ/7ckFVDjv/lor1+7hhDpNo+ndjx1yNAGxHmrJbBVSlLk7pUlhx+1eD7WBRyF19y6aVERlVA7W42ukPlpXZVRKXZVSh3RvV6UqR1sw19ZmqpTTXRl7hUfl8AX/GcB8a65HE60bIPtIMppM5SyZ69bNVoNUWZKl7zVNLobVULtlzavNID11SooifNNX7GYArVuryMArB9AE6UpYDXXNdm3gNNleUGWoh7lsRdS4lbFLUN9oPIz0AWO9ey0NN+29nkfrAORoPdQHS/J1jzJY63C3bvN1Aiav1VAXMHuXKmldxaFSrNMW7Gbu4TtZz5mrUGESh1yOr98g7QCfi+eF5+UW0vOCC8B/ivHhZ3xx4DuCbh2wI+oKZ2oYVlSkVl/4/h5eiofNuQhYD3Ud6w+NJjP14YoDnshWQ61/T1vqUematxb1LmA91KqMaRw53V576ehmC+Z6cnTq3cAVhbXZaJ2mJfnaPuH0RY1xGinMBr5ehRe7dQAW3jYZ5iYX28WrobaXsnvCY/eUPHwNsFhdDnWPd03M5v+xtbeltuB8rT4lSnHAPHJtb2HFe53Dkrt1DpNh7rxm5a+I2n6Ce1r/4ou2PpjPGFa8115cdmnW9v5gwzMX9kuXQ92lHrsa35d6M+9Tly7IXN7h9kOh0RRzvdWX3XPtnslcbjL31+EmNqPWy/V8q2DtPUfswqid6wW7WQHMJzeth/Y1ffNSe8n3Zl/eIFmTWKrxToEveq8nKY9pBfshin2zdNkvV+FH4A1uND23jabP25XHdXAb/w38wDO+PjDP90/n+3YudN+iGHAiT151Pa4/xBlfFrjfa2sz2H2kub+e1tmC3QxgDlxzseuRBPZXdsvx9fb7PyB+mcB/AMbYwsV84y6HAAAAAElFTkSuQmCC" alt="QR">
+      <div>
+        <h3>State Laws — TN, OK, AL</h3>
+        <p>Tennessee's SB1339 would let the state <span class="bold">dissolve organizations — including churches</span> — sheltering 10+ undocumented adults. Classified as a felony.</p>
+        <p class="small">Tennessee Lookout, 2025</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:15px; opacity:0.5; margin-top:12px;">Scan any QR code to read the full source article.</p>
+</div>
+
+<!-- SLIDE 7: WHAT HAS WORKED -->
+<div class="slide bg-green">
+  <span class="label label-outline">Different approaches</span>
+  <h2>Organizations that minimized data collection were more resilient</h2>
+  <div class="two-col" style="margin-top:12px;">
+    <div class="case-item-dark" style="flex-direction:column;">
+      <div style="display:flex; gap:14px; align-items:start;">
+        <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACQ0lEQVR4nO2ZUYrcMBBEn6KB/WzfIEfpudleTXuU3KD9udBD5aPlTQhkdkggY0H0YYzrwyW5VVUtN3Fv3L7cheE//nc4CoAuJSgcPE0KB8Dz2fwe4O+SuiSNuulB4l1SnJ//F6C1K3u77Ne2cWsNE8DeLifh9xDut83ZG3ju7SX++fv/GpeGwtNG28gnvP/PcWkAl70BL9+apLaBKU/C7xP8rbUGgF/qul97cGutbafgd3+oRnjpT4Ik8Hp8ev0pzadksweYsFES1NfgT0IynQvAJCltpK3AXwOYmg89XBoJPTyX8F8NhStIvGah8B6r+C/SSBvYSBsAJgVdg6qoZ/N7ZP+mzeSjABtYGdky+tNjlj1TTqf+LFL/Kv1JG3U99rKvUf9RaccxYapGABvgfQn+Zbv2o49MUw9P0yr63zV60KWuUdPBNMvp2fwewW8b71/13hr7620D6N+ul/21xzn43R2/rH/iCkqRVsk/4GW+CuYurhSxRP3XUUOdOdgo8007RPXZ/B5Z/z4jKDCTw8dHWYC/1KNuqvi9B12jh7NG/fDRf83YYD+1Y8/m91D9mzCBV+xXeB6FtAT/KTU20srCVIlilfVPpgRhP/S/nizAf54/0MN7+NG8e+2LBfgHQCWfNPU4+sdYJH/W+XPMD5Ew/XeZ9feK+tUzHp0Xi+T/D/ztYoO95d4wVaI7Fb9P8feNlyOLtvaaNm7bmfj9Hj+c9y2P/J+8Xfar4hz87o6pP4E0ahfnbCFZwX/b//+nT8W/A2o8FXcDIDxFAAAAAElFTkSuQmCC" alt="QR">
+        <div>
+          <h3>No More Deaths — Arizona</h3>
+          <p>Desert aid camp. Raided 4 times by Border Patrol. 9 volunteers charged. <span class="bold" style="color:#95D5B2;">Every prosecution failed.</span></p>
+        </div>
+      </div>
+      <p style="margin-top:10px;">They never kept formal intake records. When the government raided, there was <span class="bold">no database to seize</span>.</p>
+    </div>
+    <div class="case-item-dark" style="flex-direction:column;">
+      <div style="display:flex; gap:14px; align-items:start;">
+        <img class="case-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOAQAAAABQysQIAAAC10lEQVR4nO2aQY7jOgxEnyIDXsrAHGCOwtws6JvRR+kb0MsGZNQsqPy/TICZaVjAcGUoXBQhkawiU8QLO2+vPOCfy990QQFQg47RXFJvDlaVt2f9SnDfczFJNK36UHBu1EDB10aVFJeD+45LKXfYzw0wjnKWx8K+ft45yvLdWH7fBYWB1bAaBlT58wWqBjWme3XL82PvP+Jc4HicP30BHffvxvLnXCQH1tjXsHPba1BjPzdo6t+N5Y+47KUUMI4HUCM/bA3OUsp2ObgvTWlhNNG8BgrrzWnjl9nyCIVlcVAY0McJvXn+OmNENFcwipvUmwBJTBqRPAOpAVAlmtNUwyT1+TgDCqthkkueeVQlycGyMU0YEWRjlXfozWtYb16D3tTblJUBkNSBkUGeJzVswju6wS5pgXWUAhbozTnKue1rXA7uS1MgucI6VuX5rUBSb7NWhizdndGPwDT67KR5RA0kr5LCqryTbJzk5BNGZFWq8uxEChvXJNF8wld3Azr7V7kDNViar2G0j+UYJ5eD+8r0nCdk4qTuA2iSfMo8kpKs9uYdk3xMTp70db6IwhSMup3yoXkfrNWnjEie4fRk4EMxPQvFfProBgaUjfXzsYDkC5SNr1IUnOV+NbgvTfKaeYQNvto8MyhTabY7GiyoDubgVUkeUsZqwjy60RzosGAdchYkfZybrZ/l/OkXg/vanoNualhPXtf0vz6a8tUZpMSzZyxDMSW1my+iMSrJUkBv3oGW9VxTMlVp6KPmeZKzoDprZRhqIul3NtmcMygAm5XX5Z6oDarQc9yNacrdxI2jlFIWgP0sD46ysOfGYsnSdy2477iMHV8NVnmH/0bEHc7tcnDfcSnlnqs9jnvSPKCzl+37sfy+y3PHJ09JXiVaXpn1JmasDCOiVEZj+p2TkzGEvBLcdxWflGoot+Sd7E1D1U4YETB60DMuy0ExMGE/Kv/+RXN5l19yNIlbUJsXJwAAAABJRU5ErkJggg==" alt="QR">
+        <div>
+          <h3>Hillsboro Mutual Aid — Oregon</h3>
+          <p>~40 volunteers deliver food to ~60 immigrant families weekly. Their practices:</p>
+        </div>
+      </div>
+      <p style="margin-top:10px;">&bull; Code names for all families &bull; Encrypted messaging only &bull; VPNs for communications &bull; Printed directions, no GPS &bull; No centralized database</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: SIMPLE PRINCIPLES -->
+<div class="slide bg-light">
+  <span class="label label-green">4 Things to Remember</span>
+  <h2>What can we do?</h2>
+  <div class="two-col" style="margin-top:12px;">
+    <div>
+      <div class="box">
+        <h3>1. Only collect what you need</h3>
+        <p>If you don't need someone's full name or address, don't ask for it. Less data = less risk.</p>
+      </div>
+      <div class="box">
+        <h3>2. Use encrypted tools</h3>
+        <p>Unencrypted messages and files (email, SMS, Google Drive) can be read by the company and requested by authorities.</p>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <h3>3. Control who has access</h3>
+        <p>Check who can see your shared files. Remove people when they leave. Use strong passwords.</p>
+      </div>
+      <div class="box">
+        <h3>4. Choose tools with intention</h3>
+        <p>If a tool wasn't built with your community's safety in mind, there may be a better option.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15: AGENDA -->
+<div class="slide bg-green">
+  <h2>What we're doing today</h2>
+  <div class="two-col" style="margin-top:12px;">
+    <div>
+      <div class="box-dark" style="border-left:4px solid #52B788;">
+        <h3>1. Shared Understanding</h3>
+        <p>30 min — The background you just heard</p>
+      </div>
+      <div class="box-dark" style="border-left:4px solid #52B788;">
+        <h3>2. Threat Modeling</h3>
+        <p>30 min — Interactive exercise mapping your data</p>
+      </div>
+    </div>
+    <div>
+      <div class="box-dark" style="border-left:4px solid #52B788;">
+        <h3>3. Breakout Groups</h3>
+        <p>45 min — What's working? What isn't?</p>
+      </div>
+      <div class="box-dark" style="border-left:4px solid #52B788;">
+        <h3>4. Report Back</h3>
+        <p>45 min — Share findings and plan next steps</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16: THREAT MODELING -->
+<div class="slide bg-warm" style="text-align:center;">
+  <span class="label label-green">Part 2</span>
+  <h2 class="green-text">Interactive Threat Modeling</h2>
+  <p class="big" style="max-width:700px; margin:0 auto 16px;">Scan the code below to participate. We'll map the data your team handles, where it lives, and who can access it.</p>
+  <div class="qr-box">[ Replace with your QR code ]</div>
+  <p style="font-size:20px; margin-top:16px;">Better information leads to <span class="bold">better decisions</span>.</p>
+</div>
+
+<!-- SLIDE 17: BREAKOUT GROUPS -->
+<div class="slide bg-light">
+  <span class="label label-green">Part 3</span>
+  <h2>Breakout Groups: Your Digital Systems</h2>
+  <p style="margin-bottom:20px; font-size:22px;">In small groups, talk through these questions:</p>
+  <ul>
+    <li><span class="bold green-text">1.</span> &nbsp;What digital tools are you currently using? (Airtable, Google Drive, Signal, etc.)</li>
+    <li><span class="bold green-text">2.</span> &nbsp;What's working well? What do you rely on?</li>
+    <li><span class="bold green-text">3.</span> &nbsp;What's frustrating, confusing, or feels insecure?</li>
+    <li><span class="bold green-text">4.</span> &nbsp;What takes too much manual effort? What could be easier?</li>
+    <li><span class="bold green-text">5.</span> &nbsp;If you could change one thing, what would it be?</li>
+  </ul>
+</div>
+
+<!-- SLIDE 18: REPORT BACK -->
+<div class="slide bg-green">
+  <span class="label label-outline">Part 4</span>
+  <h2>Report Back &amp; Next Steps</h2>
+  <p class="big" style="max-width:900px; margin-bottom:28px;">Each group shares what you found: what you're using, your biggest pain points, and your #1 priority.</p>
+  <div class="two-col">
+    <div class="box-dark">
+      <h3>Together we'll figure out:</h3>
+      <p>&bull; What systems need the most urgent attention?<br>&bull; What's a realistic scope to start with?<br>&bull; Who wants to be involved in follow-up?</p>
+    </div>
+    <div class="box-dark">
+      <h3>After today:</h3>
+      <p>&bull; Share findings through BAM channels<br>&bull; Discuss migration timelines<br>&bull; Connect with BAM security working group<br>&bull; Plan follow-up sessions as needed</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 19: CLOSING -->
+<div class="slide bg-warm" style="text-align:center; justify-content:center;">
+  <h1 class="green-text" style="max-width:900px; margin:0 auto 24px;">Every community deserves digital infrastructure as thoughtful as the work it supports.</h1>
+  <p class="big" style="max-width:700px; margin:0 auto 32px;">This is a first step. Let's build it together.</p>
+  <div style="display:flex; gap:20px; justify-content:center; align-items:center;">
+    <p style="font-size:18px;">All sources compiled at:</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOAQAAAABQysQIAAACp0lEQVR4nO2aTarjQAyEP6cNWco3eEeRrzY3U46SAwwoy0CbmoU6eYtZ5MH8pWEaE3DQQkJ/VdVexItznF5ZwH+TP2mCEqAplK4EExZYdKvseX8nd78WkUtq6RUU8IylScrpIjoBy7Jj3+4bcAFveWlSU3Bb1r/ty+80OV/34yOwb8cGXO7bP/TlV0xQOnhLbwkm8I5jwtSSNl/VPfpIqrHQoVsA0/bRY9al//wAU86650maAgugW1TuJM0W0Ynbvt72lctq6tCuu5KWHBvc9mN7N3dfH6V3C0nPxqmSU3pTTFp14E3RFK0qLV3pGgt3yoia1C26SdVHFlV4TerzRXTith/Lcr7uwAoddN2XjygI0fLd3H19JGHqFp1aslErqRbulPtIAmomYPocEVKTJu2jbqrG6cDIThQWmjJH6Z+cCKTooKSbpo1orKQmYaH0ljwY07QRFRuiIGtIaokUSubso8BCUh+o1TuPX5sR11GwB4v2HG54RVT5mjKiwgYP3ldzb+CHOauum7DCdRSnqH00yu+d3P2iScvi5tw/4ti4b9yXZb3t4FK8nbuvjh7EobIjRbdQ0vExMd7J3S9XXdRirbhKilTV3pz7qCTHboFFG+So+mhuflQsb6A7Cub5nFWnWqYlavUhm1BFOCXjg3N6h3N+KnXHxjkdmFAlLuwdrSZDUugOXOnT9lF0vHTICmoQ2KKBM/ZR6d6KAtuDHD201gn76KGpJgPaKZ6v4893cvcLJiu3DWg9gHNuwtfvm0wLrN/9r/ry20zGKMAC07Fdjs2P7VKLaUJ160Td8d32dt3vW11S0NLhsmxMqnvXZOgw5O4nRco5McO44ysOHkWO6nXWfTTu+GK827hCgoJGM+YIoKX3Qf3GU3h1wum9/P+K5u1NfgAGYJ1R6xoOhAAAAABJRU5ErkJggg==" alt="QR to full source document" style="width:120px; height:120px; border-radius:8px;">
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="slide-counter"><span id="current">1</span> / <span id="total">13</span></div>
+
+<button class="nav-btn nav-prev" onclick="goSlide(-1)" aria-label="Previous">&#8592;</button>
+<button class="nav-btn nav-next" onclick="goSlide(1)" aria-label="Next">&#8594;</button>
+
+<script>
+  var allSlides = document.getElementsByClassName('slide');
+  var currentIdx = 0;
+  var totalSlides = allSlides.length;
+
+  document.getElementById('total').textContent = totalSlides;
+
+  for (var i = 0; i < totalSlides; i++) {
+    allSlides[i].style.display = 'none';
+  }
+  allSlides[0].style.display = 'flex';
+
+  function goSlide(dir) {
+    allSlides[currentIdx].style.display = 'none';
+    currentIdx = currentIdx + dir;
+    if (currentIdx < 0) currentIdx = totalSlides - 1;
+    if (currentIdx >= totalSlides) currentIdx = 0;
+    allSlides[currentIdx].style.display = 'flex';
+    document.getElementById('current').textContent = currentIdx + 1;
+  }
+
+  document.onkeydown = function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goSlide(-1); }
+  };
+
+  function rescale() {
+    var deck = document.querySelector('.deck');
+    var sw = window.innerWidth / 1280;
+    var sh = window.innerHeight / 720;
+    deck.style.setProperty('--scale', Math.min(sw, sh, 1.2));
+  }
+  window.addEventListener('resize', rescale);
+  rescale();
+</script>
 </body>
 </html>
